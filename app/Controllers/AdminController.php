@@ -47,15 +47,44 @@ class AdminController extends BaseController
         return view('admin/index');
     }
 
-    public function dashboard()
-    {
-        if (!session()->get('isAdminLoggedIn')) {
-            return redirect()->to('/admin/login');
-        }
-
-        // Load dashboard view with required data
-        return view('admin/dashboard');
+ public function dashboard()
+{
+    if (!session()->get('isAdminLoggedIn')) {
+        return redirect()->to('/admin/login');
     }
+
+    $db = \Config\Database::connect();
+    
+    // Total Sales
+    $totalSalesQuery = $db->query("SELECT SUM(amount) AS total_sales FROM payments WHERE payment_status = 'completed'");
+    $totalSales = $totalSalesQuery->getRow()->total_sales ?? 0;
+
+    // Pending Sales
+    $pendingSalesQuery = $db->query("SELECT SUM(amount) AS pending_sales FROM payments WHERE payment_status = 'pending'");
+    $pendingSales = $pendingSalesQuery->getRow()->pending_sales ?? 0;
+
+    // Total Users
+    $totalUsersQuery = $db->query("SELECT COUNT(*) AS total_users FROM users");
+    $totalUsers = $totalUsersQuery->getRow()->total_users ?? 0;
+
+    // Monthly Sales
+    $monthlySalesQuery = $db->query("SELECT SUM(amount) AS monthly_sales FROM payments WHERE payment_status = 'completed' AND MONTH(payment_date) = MONTH(CURRENT_DATE)");
+    $monthlySales = $monthlySalesQuery->getRow()->monthly_sales ?? 0;
+
+    // Pending Monthly Sales
+    $pendingMonthlySalesQuery = $db->query("SELECT SUM(amount) AS pending_monthly_sales FROM payments WHERE payment_status = 'pending' AND MONTH(payment_date) = MONTH(CURRENT_DATE)");
+    $pendingMonthlySales = $pendingMonthlySalesQuery->getRow()->pending_monthly_sales ?? 0;
+
+    // Load dashboard view with required data
+    return view('admin/dashboard', [
+        'total_sales' => $totalSales,
+        'pending_sales' => $pendingSales,
+        'total_users' => $totalUsers,
+        'monthly_sales' => $monthlySales,
+        'pending_monthly_sales' => $pendingMonthlySales,
+    ]);
+}
+
 
     public function logout()
     {

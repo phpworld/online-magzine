@@ -2,6 +2,113 @@
 <?= $this->extend('admin/layouts/admin_layout') ?>
 
 <?= $this->section('content') ?>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<div class="container ">
+    <h2 class="text-center mb-4">Admin Dashboard</h2>
+    
+    <div class="row text-center g-4 mb-4">
+        <!-- Total Sales -->
+        <div class="col-md-4">
+            <div class="p-4 border rounded shadow-sm bg-light h-100">
+                <h5>Total Sales</h5>
+                <p class="h2"><?= esc($total_sales) ?> INR</p>
+            </div>
+        </div>
+        
+        <!-- Total Users -->
+        <div class="col-md-4">
+            <div class="p-4 border rounded shadow-sm bg-light h-100">
+                <h5>Total Users</h5>
+                <p class="h2"><?= esc($total_users) ?></p>
+            </div>
+        </div>
+        
+        <!-- Monthly Sales -->
+        <div class="col-md-4">
+            <div class="p-4 border rounded shadow-sm bg-light h-100">
+                <h5>This Month's Sales</h5>
+                <p class="h2"><?= esc($monthly_sales) ?> INR</p>
+            </div>
+        </div>
+    </div>
+    <hr class="my-4">
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <h3>Total Sales Pie Chart</h3>
+            <canvas id="totalSalesChart"></canvas>
+        </div>
+        <div class="col-md-4">
+            <h3>Monthly Sales Pie Chart</h3>
+            <canvas id="monthlySalesChart"></canvas>
+        </div>
+		
+		<div class="col-md-4">
+            
+        </div>
+    </div>
+    
+    <div class="row text-center g-4">
+        <!-- Other sections... -->
+    </div>
+</div>
+
+<script>
+const totalSalesCtx = document.getElementById('totalSalesChart').getContext('2d');
+const monthlySalesCtx = document.getElementById('monthlySalesChart').getContext('2d');
+
+const totalSalesChart = new Chart(totalSalesCtx, {
+    type: 'pie',
+    data: {
+        labels: ['Completed Sales', 'Pending Sales'],
+        datasets: [{
+            label: 'Total Sales',
+            data: [<?= esc($total_sales) ?>, <?= esc($pending_sales) ?>], // Assuming you calculate pending sales
+            backgroundColor: ['#36A2EB', '#FF6384'],
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: 'Total Sales Distribution'
+            }
+        }
+    }
+});
+
+const monthlySalesChart = new Chart(monthlySalesCtx, {
+    type: 'pie',
+    data: {
+        labels: ['Completed Sales', 'Pending Sales'],
+        datasets: [{
+            label: 'Monthly Sales',
+            data: [<?= esc($monthly_sales) ?>, <?= esc($pending_monthly_sales) ?>], // Calculate pending monthly sales
+            backgroundColor: ['#36A2EB', '#FF6384'],
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: 'Monthly Sales Distribution'
+            }
+        }
+    }
+});
+</script>
+
+<hr class="my-4">
 
 <div class="container ">
     <h2 class="text-center mb-4">Admin Dashboard</h2>
