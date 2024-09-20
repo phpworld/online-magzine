@@ -76,14 +76,14 @@
                 <span class="hide-menu">Manage Users</span>
               </a>
             </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="<?= base_url('admin/manageSubscriptions') ?>" aria-expanded="false">
+           <!---- <li class="sidebar-item">
+              <a class="sidebar-link" href="<?//= base_url('admin/manageSubscriptions') ?>" aria-expanded="false">
                 <span>
                   <i class="ti ti-typography"></i>
                 </span>
                 <span class="hide-menu">Subscriptions Plans</span>
               </a>
-            </li>
+            </li> ---->
             
             <li class="sidebar-item">
               <a class="sidebar-link" href="<?= base_url('admin/payment-history') ?>" aria-expanded="false">

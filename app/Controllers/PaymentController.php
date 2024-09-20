@@ -136,5 +136,26 @@ class PaymentController extends Controller
     }
 	
 	
+	public function payment_history()
+{
+    $model = new PaymentModel();
+
+    // Get pagination parameters
+    $limit = 10; // Records per page
+    $page = $this->request->getGet('page') ?? 1; // Get current page from URL
+    $offset = ($page - 1) * $limit; // Calculate offset
+
+    // Fetch payment history with user names
+    $data['payments'] = $model->getPaymentHistoryWithUserNames($limit, $offset);
+    
+    // Get total records for pagination
+    $totalRecords = $model->getTotalPaymentRecords();
+    $data['pager'] = $model->pager;
+    $data['pager'] = \Config\Services::pager();
+    $data['pager']->makeLinks($page, $limit, $totalRecords);
+
+    return view('admin/payment_history', $data);
+}
+
 	
 }

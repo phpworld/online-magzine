@@ -26,20 +26,15 @@ $routes->get('my_magzines/', 'PaymentController::showUserCompletedMagazines');
 
 $routes->get('user/change-password', 'UserController::changePassword');
 $routes->post('user/change-password', 'UserController::changePassword');
-
-
-
-
 $routes->get('user/payment_history', 'UserController::paymentHistory',['filter' => 'auth']);
+
+
  
 $routes->get('admin/login', 'AdminController::login');
 $routes->post('admin/login', 'AdminController::login');
 $routes->get('admin/dashboard', 'AdminController::dashboard', ['filter' => 'authfilter']);
 $routes->get('admin/logout', 'AdminController::logout');
-$routes->get('admin/payment-history', 'PaymentController::history');
-
-
-
+$routes->get('admin/payment-history', 'PaymentController::payment_history');
 
 // Magazine Management
 $routes->get('admin/uploadMagazine', 'AdminController::uploadMagazine', ['filter' => 'authfilter']);
@@ -53,6 +48,7 @@ $routes->get('admin/deleteMagazine/(:num)', 'AdminController::deleteMagazine/$1'
 $routes->get('admin/manageUsers', 'AdminController::manageUsers', ['filter' => 'authfilter']);
 $routes->get('admin/viewUser/(:num)', 'AdminController::viewUser/$1', ['filter' => 'authfilter']);
 $routes->get('admin/deleteUser/(:num)', 'AdminController::deleteUser/$1', ['filter' => 'authfilter']);
+$routes->post('admin/updateUserStatus/(:num)', 'AdminController::updateUserStatus/$1');
 
 // Subscription Management
 $routes->get('admin/manageSubscriptions', 'AdminController::manageSubscriptions', ['filter' => 'authfilter']);
@@ -64,5 +60,6 @@ $routes->get('admin/deleteSubscription/(:num)', 'AdminController::deleteSubscrip
 
 $routes->get('admin/categories', 'AdminController::listCategories');
 $routes->post('admin/createCategory', 'AdminController::createCategory');
-$routes->post('admin/updateCategory/(:num)', 'AdminController::updateCategory/$1');
+$routes->get('admin/editCategory/(:num)', 'AdminController::edit_category/$1');
+$routes->post('admin/update_category/(:num)', 'AdminController::updateCategory/$1');
 $routes->get('admin/deleteCategory/(:num)', 'AdminController::deleteCategory/$1');

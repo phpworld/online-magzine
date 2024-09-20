@@ -51,5 +51,22 @@ class PaymentModel extends Model
     }
 	
 	
+	///////
+	
+	 public function getPaymentHistoryWithUserNames($limit, $offset)
+    {
+        return $this->db->table('payments p')
+            ->join('users u', 'p.user_id = u.id')
+            ->select('p.transaction_id, u.name AS user_name, p.amount, p.payment_date, p.payment_status')
+            ->limit($limit, $offset)
+            ->get()
+            ->getResultArray();
+    }
+
+    public function getTotalPaymentRecords()
+    {
+        return $this->db->table('payments')->countAll();
+    }
+	
 	
 }

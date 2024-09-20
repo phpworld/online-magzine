@@ -1,4 +1,3 @@
-<!-- admin/payment_history.php -->
 <?= $this->extend('admin/layouts/admin_layout') ?>
 
 <?= $this->section('content') ?>
@@ -9,8 +8,12 @@ ul.pagination li {
     margin: 4px;
     border-radius: 8px;
 }
-</style>    
-<div class="container ">
+.badge {
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+</style>
+<div class="container">
     <h4 class="mb-3">All Payment History</h4>
 
     <!-- Table for Payment History -->
@@ -19,7 +22,7 @@ ul.pagination li {
             <thead>
                 <tr>
                     <th>Transaction ID</th>
-                    <th>User ID</th>
+                    <th>User Name</th>
                     <th>Amount</th>
                     <th>Payment Date</th>
                     <th>Status</th>
@@ -30,11 +33,11 @@ ul.pagination li {
                     <?php foreach ($payments as $payment): ?>
                         <tr>
                             <td><?= esc($payment['transaction_id']) ?></td>
-                            <td><?= esc($payment['user_id']) ?></td>
+                            <td><?= esc($payment['user_name']) ?></td> <!-- Changed from user_id to user_name -->
                             <td><?= esc($payment['amount']) ?></td>
                             <td><?= esc($payment['payment_date']) ?></td>
                             <td>
-                                <span class="badge <?= esc($payment['payment_status']) === 'success' ? 'bg-success' : (esc($payment['payment_status']) === 'pending' ? 'bg-warning' : 'bg-success') ?>">
+                                <span class="badge <?= esc($payment['payment_status']) === 'completed' ? 'bg-success' : (esc($payment['payment_status']) === 'pending' ? 'bg-warning' : 'bg-danger') ?>">
                                     <?= esc(ucfirst($payment['payment_status'])) ?>
                                 </span>
                             </td>

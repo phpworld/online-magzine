@@ -43,7 +43,8 @@ class UserController extends BaseController
                 $data = [
                     'name'     => $this->request->getVar('name'),
                     'email'    => $this->request->getVar('email'),
-                    'password' => $password
+                    'password' => $password,
+					'status' => 1
                 ];
 
                 $model->save($data);
@@ -55,41 +56,46 @@ class UserController extends BaseController
         return view('register');
     }
 
-    // Method to display the login form and handle login logic
-    public function login()
-    {
-        helper(['form']);
+   // Method to display the login form and handle login logic
+public function login()
+{
+    helper(['form']);
 
-        if ($this->request->getMethod() == 'POST') {
-            $rules = [
-                'email'    => 'required|valid_email',
-                'password' => 'required|min_length[8]|max_length[255]',
-            ];
+    if ($this->request->getMethod() == 'POST') {
+        $rules = [
+            'email'    => 'required|valid_email',
+            'password' => 'required|min_length[8]|max_length[255]',
+        ];
 
-            if (!$this->validate($rules)) {
-                return view('login', [
-                    'validation' => $this->validator
-                ]);
-            } else {
-                $model = new UserModel();
-                $user = $model->where('email', $this->request->getVar('email'))->first();
+        if (!$this->validate($rules)) {
+            return view('login', [
+                'validation' => $this->validator
+            ]);
+        } else {
+            $model = new UserModel();
+            $user = $model->where('email', $this->request->getVar('email'))->first();
 
-                if ($user) {
-                    // Verify the password
-                    if (password_verify($this->request->getVar('password'), $user['password'])) {
-                        $this->setUserSession($user);
-                        return redirect()->to('user/dashboard');
-                    } else {
-                        return redirect()->to('user/login')->with('error', 'Invalid login credentials.');
-                    }
-                } else {
-                    return redirect()->to('user/login')->with('error', 'User not found.');
+            if ($user) {
+                // Check if the user is active
+                if ($user['status'] == 0) {
+                    return redirect()->to('user/login')->with('error', 'Your account is inactive. Please contact support.');
                 }
+
+                // Verify the password
+                if (password_verify($this->request->getVar('password'), $user['password'])) {
+                    $this->setUserSession($user);
+                    return redirect()->to('user/dashboard');
+                } else {
+                    return redirect()->to('user/login')->with('error', 'Invalid login credentials.');
+                }
+            } else {
+                return redirect()->to('user/login')->with('error', 'User not found.');
             }
         }
-
-        return view('login');
     }
+
+    return view('login');
+}
 
     // Method to set user session data after successful login
     private function setUserSession($user)

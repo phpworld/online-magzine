@@ -189,17 +189,57 @@ public function uploadMagazine()
     }
 
     // Function to manage users
-    public function manageUsers()
-    {
-        if (!session()->get('isAdminLoggedIn')) {
-            return redirect()->to('/admin/login');
-        }
-
-        $userModel = new UserModel();
-        $data['users'] = $userModel->findAll();
-
-        return view('admin/manage_users', $data);
+   public function manageUsers()
+{
+    if (!session()->get('isAdminLoggedIn')) {
+        return redirect()->to('/admin/login');
     }
+
+    $userModel = new UserModel();
+
+    // Get the current page number from the query string, default to 1
+    $page = $this->request->getGet('page') ?? 1;
+
+    // Set the number of users per page
+    $perPage = 10; // You can adjust this as needed
+
+    // Fetch users with pagination
+    $data['users'] = $userModel->paginate($perPage);
+    $data['pager'] = $userModel->pager; // This is for the pagination links
+
+    return view('admin/manage_users', $data);
+}
+
+//////// Active & Inactive users 
+public function updateUserStatus($id)
+{
+    $userModel = new UserModel();
+
+    // Check if the request method is POST
+    if ($this->request->getMethod() !== 'POST') {
+        return $this->response->setJSON(['success' => false, 'message' => 'Invalid request method.']);
+    }
+
+    // Get the current status
+    $user = $userModel->find($id);
+    if (!$user) {
+        return $this->response->setJSON(['success' => false, 'message' => 'User not found.']);
+    }
+
+    // Toggle the user's status
+    $newStatus = ($user['status'] == 1) ? 0 : 1; // Switch between active (1) and inactive (0)
+
+    // Update the user's status
+    try {
+        $userModel->update($id, ['status' => $newStatus]);
+        return $this->response->setJSON(['success' => true, 'message' => 'User status updated successfully.']);
+    } catch (\Exception $e) {
+        return $this->response->setJSON(['success' => false, 'message' => 'Error updating status: ' . $e->getMessage()]);
+    }
+}
+
+
+
 
     // Function to view a specific user profile
     public function viewUser($id)
@@ -263,6 +303,16 @@ public function uploadMagazine()
         $data['categories'] = $this->categoriesModel->getAllCategories();
         return view('admin/categories_list', $data);
     }
+
+   //Edit categories
+   
+   public function edit_category($id)
+{
+    //$model = new categoriesModel(); // Assuming you have a CategoryModel
+    $data['category'] = $this->categoriesModel->find($id); // Fetch the category by ID
+
+    return view('admin/edit_category', $data);
+}
 
     // Update a category
     public function updateCategory($id)
