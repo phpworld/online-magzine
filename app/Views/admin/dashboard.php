@@ -4,8 +4,7 @@
 <?= $this->section('content') ?>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-
-<div class="container ">
+<div class="container">
     <h2 class="text-center mb-4">Admin Dashboard</h2>
     
     <div class="row text-center g-4 mb-4">
@@ -33,6 +32,7 @@
             </div>
         </div>
     </div>
+    
     <hr class="my-4">
 
     <div class="row mb-4">
@@ -44,75 +44,92 @@
             <h3>Monthly Sales Pie Chart</h3>
             <canvas id="monthlySalesChart"></canvas>
         </div>
-		
-		<div class="col-md-4">
-            
+        <div class="col-md-4">
+            <h3>Weekly Sales Pie Chart</h3>
+            <canvas id="weeklySalesChart"></canvas>
         </div>
     </div>
     
-    <div class="row text-center g-4">
-        <!-- Other sections... -->
-    </div>
-</div>
+    <script>
+    const totalSalesCtx = document.getElementById('totalSalesChart').getContext('2d');
+    const monthlySalesCtx = document.getElementById('monthlySalesChart').getContext('2d');
+    const weeklySalesCtx = document.getElementById('weeklySalesChart').getContext('2d');
 
-<script>
-const totalSalesCtx = document.getElementById('totalSalesChart').getContext('2d');
-const monthlySalesCtx = document.getElementById('monthlySalesChart').getContext('2d');
-
-const totalSalesChart = new Chart(totalSalesCtx, {
-    type: 'pie',
-    data: {
-        labels: ['Completed Sales', 'Pending Sales'],
-        datasets: [{
-            label: 'Total Sales',
-            data: [<?= esc($total_sales) ?>, <?= esc($pending_sales) ?>], // Assuming you calculate pending sales
-            backgroundColor: ['#36A2EB', '#FF6384'],
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top',
-            },
-            title: {
-                display: true,
-                text: 'Total Sales Distribution'
+    const totalSalesChart = new Chart(totalSalesCtx, {
+        type: 'pie',
+        data: {
+            labels: ['Completed Sales', 'Pending Sales'],
+            datasets: [{
+                label: 'Total Sales',
+                data: [<?= esc($total_sales) ?>, <?= esc($pending_sales) ?>],
+                backgroundColor: ['#5D87FF', '#FF6384'],
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Total Sales Distribution'
+                }
             }
         }
-    }
-});
+    });
 
-const monthlySalesChart = new Chart(monthlySalesCtx, {
-    type: 'pie',
-    data: {
-        labels: ['Completed Sales', 'Pending Sales'],
-        datasets: [{
-            label: 'Monthly Sales',
-            data: [<?= esc($monthly_sales) ?>, <?= esc($pending_monthly_sales) ?>], // Calculate pending monthly sales
-            backgroundColor: ['#36A2EB', '#FF6384'],
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top',
-            },
-            title: {
-                display: true,
-                text: 'Monthly Sales Distribution'
+    const monthlySalesChart = new Chart(monthlySalesCtx, {
+        type: 'pie',
+        data: {
+            labels: ['Completed Sales', 'Pending Sales'],
+            datasets: [{
+                label: 'Monthly Sales',
+                data: [<?= esc($monthly_sales) ?>, <?= esc($pending_monthly_sales) ?>],
+                backgroundColor: ['#5D87FF', '#FF6384'],
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Monthly Sales Distribution'
+                }
             }
         }
-    }
-});
-</script>
+    });
 
-<hr class="my-4">
+    const weeklySalesChart = new Chart(weeklySalesCtx, {
+        type: 'pie',
+        data: {
+            labels: ['Completed Sales', 'Pending Sales'],
+            datasets: [{
+                label: 'Weekly Sales',
+                data: [<?= esc($weekly_sales) ?>, <?= esc($pending_weekly_sales) ?>],
+                backgroundColor: ['#5D87FF', '#FF6384'],
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Weekly Sales Distribution'
+                }
+            }
+        }
+    });
+    </script>
 
-<div class="container ">
-    <h2 class="text-center mb-4">Admin Dashboard</h2>
-    
+    <hr class="my-4">
+
     <div class="row text-center g-4">
         <!-- Dashboard -->
         <div class="col-6 col-md-4">
@@ -196,6 +213,4 @@ const monthlySalesChart = new Chart(monthlySalesCtx, {
     </div>
 </div>
 
-
 <?= $this->endSection() ?>
-

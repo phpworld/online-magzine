@@ -75,6 +75,14 @@ class AdminController extends BaseController
     $pendingMonthlySalesQuery = $db->query("SELECT SUM(amount) AS pending_monthly_sales FROM payments WHERE payment_status = 'pending' AND MONTH(payment_date) = MONTH(CURRENT_DATE)");
     $pendingMonthlySales = $pendingMonthlySalesQuery->getRow()->pending_monthly_sales ?? 0;
 
+    // Weekly Sales
+    $weeklySalesQuery = $db->query("SELECT SUM(amount) AS weekly_sales FROM payments WHERE payment_status = 'completed' AND YEARWEEK(payment_date, 1) = YEARWEEK(CURRENT_DATE, 1)");
+    $weeklySales = $weeklySalesQuery->getRow()->weekly_sales ?? 0;
+
+    // Pending Weekly Sales
+    $pendingWeeklySalesQuery = $db->query("SELECT SUM(amount) AS pending_weekly_sales FROM payments WHERE payment_status = 'pending' AND YEARWEEK(payment_date, 1) = YEARWEEK(CURRENT_DATE, 1)");
+    $pendingWeeklySales = $pendingWeeklySalesQuery->getRow()->pending_weekly_sales ?? 0;
+
     // Load dashboard view with required data
     return view('admin/dashboard', [
         'total_sales' => $totalSales,
@@ -82,6 +90,8 @@ class AdminController extends BaseController
         'total_users' => $totalUsers,
         'monthly_sales' => $monthlySales,
         'pending_monthly_sales' => $pendingMonthlySales,
+        'weekly_sales' => $weeklySales,
+        'pending_weekly_sales' => $pendingWeeklySales,
     ]);
 }
 
